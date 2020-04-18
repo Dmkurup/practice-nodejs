@@ -1,75 +1,27 @@
 const Joi = require('joi');
+const config = require('config');
+const logger =require('./logger');
+const coursesRoute = require('./courses');
+const home = require('./home');
 const express = require('express');
+const helmet = require('helmet');
+const morgan = require('morgan');
 const app =express();
 
 app.use(express.json());
+app.use(logger);
+app.use(helmet());
+app.use(morgan('tiny'));
+app.use(express.static('public'));
+app.use('/',home);
+app.use('/api/courses',coursesRoute);
 
-const courses =[
-    {id:1, name:'course1'},
-    {id:2, name:'course2'},
-    {id:3, name:'course3'}
-]
+console.log(`App name ${config.get('name')}`);
+console.log(`Mail host name ${config.get('mail.host')}`);
 
-app.get('/',(req,res)=>{
-    res.send("Hello World!!!!");
-})
+console.log(`NODE_ENV IS ${process.env.NODE_ENV}`);
+console.log(`APP ENV IS ${app.get('env')}`);
 
-app.get('/api/courses',(req,res)=>{
-    res.send([1,2,3]);
-})
-
-app.get('/api/courses/:id',(req,res)=>{
-   // res.send(req.params.id);
-   // res.send(req.params); 
-   //res.send(req.query);
-
-   const course = courses.find(c=> c.id === parseInt(req.params.id));
-   if(!course)  return res.status(404).send("Course with given id not found!");
-   res.send(course);
-   
-})
-
-
-app.post('/api/courses',(req,res)=>{
-
-   const {error}=validateData(req.body);
-   if(error) return  res.status(400).send(error.details[0].message);
-    const course={
-        id:courses.length+1,
-        name:req.body.name
-    };
-    courses.push(course);
-    res.send(courses);
-})
-
-app.put('/api/courses/:id',(req,res)=>{
-    const course = courses.find(c=> c.id === parseInt(req.params.id));
-    if(!course)  return res.status(404).send("Course with given id not found!");
-
-    const { error }=validateData(req.body);
-    if(error) return  res.status(400).send(error.details[0].message);
-
-  course.name =req.body.name;
-  res.send(course);
-
-})
-
-app.delete('/api/courses/:id',(req,res)=>{
-    const course = courses.find(c=>  c.id === parseInt(req.params.id));
-    if(!course) return res.status(404).send("Couse with the given id is not found");
-
-    const index = courses.indexOf(course);
-    courses.splice(index,1);
-
-    res.send(course);
-})
-
-function validateData(course){
-    const schema ={
-        name:Joi.string().min(3).required()
-    };
-    return Joi.validate(course,schema); 
-}
 
 const port = process.env.PORT || 3000;
 // TO SET ENV VARIABLE SAY  'set PORT=5000'
