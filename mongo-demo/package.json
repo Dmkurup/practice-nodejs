@@ -1,5 +1,5 @@
 {
-  "name": "vidly-demo",
+  "name": "mongo-demo",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,8 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
-    "joi": "^13.1.0",
-    "mongoose": "^5.9.10"
+    "mongoose": "^5.0.1"
   }
 }
