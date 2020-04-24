@@ -20,7 +20,13 @@ router.put('/:id',async(req,res)=>{
     const { error } = validate(req.body);
     if(error) return res.status(404).send(error);
 
-    const customer = Customer.findByIdAndUpdate(req.params.id,{isGold:req.body.isGold},{new:true});
+    const customer = Customer.findByIdAndUpdate(req.params.id,
+        {  
+         name: req.body.name,
+         isGold: req.body.isGold,
+         phone: req.body.phone
+        },
+        {new:true});
 
     if(!customer) return res.status(404).send("Customer with the specified id is not found")
     res.send(customer);

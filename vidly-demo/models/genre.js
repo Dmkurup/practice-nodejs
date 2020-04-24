@@ -23,6 +23,6 @@ function validateGenre(genreName){
 
 }
 
-
+module.exports.genreSchema= genreSchema;
 module.exports.Genre = Genre;
 module.exports.validate = validateGenre;
