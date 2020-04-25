@@ -4,13 +4,13 @@ const mongoose = require('mongoose');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
-
+const asyncMiddleware = require('../middleware/async');
 
 //find all
-router.get('/',async(req,res)=>{
-    const genres = await Genre.find().sort('name');
-    res.send(genres);
-})
+router.get('/',asyncMiddleware(async(req,res,next)=>{
+        const genres = await Genre.find().sort('name');
+        res.send(genres);
+}));
 
 //find by id
 router.get('/:id',async(req,res)=>{

@@ -1,32 +1,12 @@
+require('express-async-errors'); // can use this in place of the async middleare we coded
+
+const winston = require('winston');
 const express= require('express');
-const mongoose = require('mongoose');
-const config = require('config');
 const app = express();
 const Joi = require('joi');
-const genres = require('./routes/genres');
-const customers = require('./routes/customers');
-const movies = require('./routes/movies');
-const rentals = require('./routes/rentals');
-const users = require('./routes/users');
-const auth = require('./routes/auth');
-
-if(!config.get('jwtPrivateKey')){
-    console.error('FATAL ERROR');
-    process.exit(1);
-}
-
-mongoose.connect('mongodb://localhost/vidly')
-    .then(()=>console.log('Connected to mongo db'))
-    .catch(err =>console.error('Could not connect to db....'));
-
-
-app.use(express.json());
-app.use('/api/genres',genres);
-app.use('/api/customers',customers);
-app.use('/api/movies',movies);
-app.use('/api/rentals',rentals);
-app.use('/api/users',users);
-app.use('/api/auth',auth);
+require('./startup/routes')(app);
+require('./startup/db')();
+require('./startup/config')();
 
 
 
@@ -36,5 +16,7 @@ app.get('/',(req,res)=>{
     res.send("Welcome to Vidly!!")
 });
 
+const port =process.env.PORT||3000;
+const server=app.listen(port); //returns a server object
 
-app.listen(3000);
+module.exports=server;
