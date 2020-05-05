@@ -16,7 +16,8 @@ app.get('/',(req,res)=>{
     res.send("Welcome to Vidly!!")
 });
 
-const port =process.env.PORT||3000;
+const port =process.env.PORT||5000;
+console.log(port);
 const server=app.listen(port); //returns a server object
 
 module.exports=server;
